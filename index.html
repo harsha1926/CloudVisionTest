@@ -1,0 +1,62 @@
+<html>
+<title>Cloud Vision API</title>
+
+<body>
+    Provide Public Image URL
+    <input type="text" value="" id="imageURL" />
+    <button onclick="callVisionAPI()">Extract Text from Image</button>
+    <br />
+    <p>
+        Result
+    </p>
+    <div id="result"></div>
+    <div style="color: red" id="error"></div>
+</body>
+
+<script>
+
+    const callVisionAPI = async () => {
+        document.getElementById("error").innerHTML = ""
+        document.getElementById("result").innerHTML = "Loading..."
+        const elImageURL = document.getElementById("imageURL");
+        if (elImageURL && elImageURL.value) {
+            const rawResponse = await fetch('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBnAYm6fVjaIoYE8EDtKgGQpYE-Oew8nhg', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "requests": [
+                        {
+                            "image": {
+                                "source": {
+                                    "imageUri": elImageURL.value
+                                }
+                            },
+                            "features": [
+                                {
+                                    "type": "LOGO_DETECTION",
+                                    "maxResults": 1
+                                }
+                            ]
+                        }
+                    ]
+                })
+            });
+            const content = await rawResponse.json();
+            let responses = content.responses
+            console.log(responses)
+            document.getElementById("result").innerHTML = ""
+            if (responses[0].error) {
+                document.getElementById("error").innerHTML = responses[0].error.message
+            } else if (responses[0].logoAnnotations) {
+                document.getElementById("result").innerHTML = responses[0].logoAnnotations[0].description
+            }
+        } else {
+            alert("Please provide a valid Image URL!")
+        }
+    }
+</script>
+
+</html>
