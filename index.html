@@ -20,7 +20,7 @@
         document.getElementById("result").innerHTML = "Loading..."
         const elImageURL = document.getElementById("imageURL");
         if (elImageURL && elImageURL.value) {
-            const rawResponse = await fetch('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBnAYm6fVjaIoYE8EDtKgGQpYE-Oew8nhg', {
+            const rawResponse = await fetch('https://vision.googleapis.com/v1/images:annotate?key=', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
