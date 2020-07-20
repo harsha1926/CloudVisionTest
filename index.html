@@ -14,7 +14,6 @@
 </body>
 
 <script>
-
     const callVisionAPI = async () => {
         document.getElementById("error").innerHTML = ""
         document.getElementById("result").innerHTML = "Loading..."
@@ -36,8 +35,8 @@
                             },
                             "features": [
                                 {
-                                    "type": "LOGO_DETECTION",
-                                    "maxResults": 1
+                                    "type": "DOCUMENT_TEXT_DETECTION",
+                                    "maxResults": 100
                                 }
                             ]
                         }
@@ -45,13 +44,15 @@
                 })
             });
             const content = await rawResponse.json();
+            console.log("content", content)
             let responses = content.responses
             console.log(responses)
+            document.getElementById("result").innerHTML = JSON.stringify(responses)
             document.getElementById("result").innerHTML = ""
             if (responses[0].error) {
                 document.getElementById("error").innerHTML = responses[0].error.message
-            } else if (responses[0].logoAnnotations) {
-                document.getElementById("result").innerHTML = responses[0].logoAnnotations[0].description
+            } else if (responses[0].fullTextAnnotation) {
+                document.getElementById("result").innerHTML = JSON.stringify(responses[0].fullTextAnnotation.text)
             }
         } else {
             alert("Please provide a valid Image URL!")
